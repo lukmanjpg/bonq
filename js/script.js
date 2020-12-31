@@ -50,6 +50,10 @@ function add(){
 		scroll.classList.remove('scroll__active');
 	}
 }
+// Анимация скролла к верху страницы
+scroll.onclick = function(){
+	window.scrollTo({ top: 0, behavior: 'smooth' })
+}
 // Превращение в фиксированную шапку
 let header = document.querySelector('header');
 window.addEventListener("scroll",fixedHeader);
