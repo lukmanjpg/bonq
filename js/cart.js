@@ -1,42 +1,8 @@
-// Слайдер
-let tabBtn = document.querySelectorAll('.slider__target');
-let tabItem = document.querySelector('.slider__line');
-tabBtn.forEach(function(item){
-	item.addEventListener('click', function(){
-		let currentBtn = item;
-		let tabContent = currentBtn.getAttribute("tab-index");
-		tabBtn.forEach(function(item){
-			item.classList.remove('target-active');
-		})
-		tabItem.classList.remove('slider-1');
-		tabItem.classList.remove('slider-2');
-		tabItem.classList.remove('slider-3');
-		tabItem.classList.add(tabContent);
-		currentBtn.classList.add('target-active');
-	});
-
-});
 // Бургер меню
 let burger = document.querySelector('.burger__holder');
 let dropdown = document.querySelector('.dropdown');
 burger.onclick = function() {
 	dropdown.classList.toggle('dropdown__active');
-}
-// Появление кнопки при скролле
-window.onload = function(){ 
-  window.addEventListener('scroll', scrollAnimation);
-  let scrollElements = document.querySelectorAll('.scroll__elem');
-  let clientHeight = document.documentElement.clientHeight;
-  let result = clientHeight / 5;
-  let plusResult = window.pageYOffset + clientHeight - result;
-  function scrollAnimation(){
-   for(let i = 0;i<scrollElements.length;i++){
-      if (plusResult >= scrollElements[i].getBoundingClientRect().top) {
-        scrollElements[i].classList.add('anim');
-      }
-    }
-  }
-  scrollAnimation();
 }
 // Появление кнопки скролла
 let clientHeight = document.documentElement.clientHeight;
@@ -67,16 +33,6 @@ function fixedHeader(){
 		header.classList.remove('fixedHeader');
 		topWrap.style.marginBottom = '0px';
 	}
-}
-// Появление корзины при нажатии
-let buyCart = document.querySelector('.header-buy');
-let cartWrap = document.querySelector('.cart__wrap');
-let cartClose = document.querySelector('.close__cart');
-buyCart.onclick = function(){
-	cartWrap.classList.add('cartWrapActive');
-}
-cartClose.onclick = function(){
-	cartWrap.classList.remove('cartWrapActive');	
 }
 // выпадающее блок при SELECT
 let selectTitle = document.querySelector('.select__contact');
@@ -208,6 +164,7 @@ function secondFormCheck(){
 
 }
 // Корзина покупок
+let cart = {};
 // Массив с информацией о стульев
 let array = [
    {
@@ -283,71 +240,7 @@ let array = [
       "category":1
    }
 ];
-let cart = {};
-getProducts();
-checkCart();
-
-// Вывод продуктов на страницу
-function getProducts(){
-	let out = '';
-	for(let i in array){
-		out += ' <div class="sofa__item sofa__product">';
-		out += '<div class="sofa__top chair__top">';
-		out += '<img src="img/' + array[i].image + '" alt="" class="sofa__img">'
-		out += '<div class="sofa__top__holder">';
-		out += '<div class="sofa__top__item heart"><i class="far fa-heart"></i></div>';
-		out += '<div class="sofa__top__item eye"> <i class="far fa-eye"></i></div>';
-		out += '<div class="sofa__top__item chart"><i class="far fa-chart-bar"></i></div>';
-		out += '</div>';
-		out += '<div class="buy-button chair-button" data-id="'+ array[i].id +'"><i class="fal fa-shopping-cart"></i><span>В корзину</span></div>';
-		out += '</div>';
-		out += '<p class="product__name sofa__product__title">' + array[i].name +'</p>';
-		out += '<p class="product__price sofa__price">' + array[i].cost +'</p>';
-		out += '</div>';
-		out += '</div>';
-	}
-	document.querySelector('.chairWrap').innerHTML = out;
-	let btn = document.querySelectorAll('.chair-button');
-	for(let i = 0;i<btn.length;i++){
-		btn[i].addEventListener("click",addToCard);
-	}
-}
-// Добавление продуктов  на карту
-function addToCard(){
-	let id = this.getAttribute('data-id');
-	if (cart[id] != undefined) {
-		cart[id]++;
-	}else {
-		cart[id] = 1;
-	}
-	localStorage.setItem('cart', JSON.stringify(cart));
-	showMiniCart();
-	showCart();
-}
-// Проверка LocalStorage
-function checkCart(){
-	let result = localStorage.getItem('cart');
-	if (result != null) {
-		cart = JSON.parse(result);
-	}
-}
-
-
-
-// function totalPrice(){
-// 	let row = document.querySelector('.row');
-// 	let zero = 0;
-// 	for(let key in cart){
-// 		for(key2 in array){
-// 			if(array[key2].id == key){
-// 				zero += array[key2].cost * cart[key];
-// 			}
-// 			console.log(zero);
-// 		}
-// 	}
-// 	row.innerHTML = zero;
-// }
-// Массив с информацией о DIVAN
+// Массив с информацией о стульев
 let array2 = [
    {
       "id": 1,
@@ -422,46 +315,154 @@ let array2 = [
       "category":1
    }
 ];
-// Вывод продуктов с диван на страницу
-function getSofaProducts(){
-	let out = '';
-	for(let i in array2){
-		out += ' <div class="sofa__item sofa__product">';
-		out += '<div class="sofa__top">';
-		out += '<img src="img/' + array2[i].image + '" alt="" class="sofa__img">'
-		out += '<div class="sofa__top__holder">';
-		out += '<div class="sofa__top__item heart"><i class="far fa-heart"></i></div>';
-		out += '<div class="sofa__top__item eye"> <i class="far fa-eye"></i></div>';
-		out += '<div class="sofa__top__item chart"><i class="far fa-chart-bar"></i></div>';
-		out += '</div>';
-		out += '<div class="buy-button sofa-button" data-id="'+ array2[i].id +'"><i class="fal fa-shopping-cart"></i><span>В корзину</span></div>';
-		out += '</div>';
-		out += '<p class="product__name sofa__product__title">' + array2[i].name +'</p>';
-		out += '<p class="product__price sofa__price">' + array2[i].cost +'</p>';
-		out += '</div>';
-		out += '</div>';
-	}
-	document.querySelector('.sofaWrap').innerHTML = out;
-	let btn = document.querySelectorAll('.sofa-button');
-	for(let i = 0;i<btn.length;i++){
-		btn[i].addEventListener("click",addToCardSofa);
+checkCart();
+function checkCart(){
+	let result = localStorage.getItem('cart');
+	if (result != null) {
+		cart = JSON.parse(result);
 	}
 }
-// Добавление на карту
-function addToCardSofa(){
-	let id = this.getAttribute('data-id');
-	if (cart[id] != undefined) {
-		cart[id]++;
-	}else {
-		cart[id] = 1;
+// Вывод выбранных продуктов
+function showCart(){
+	let out = '';
+	for(let key in cart){
+		for(key2 in array){
+			console.log(array[key2]);
+			if(array[key2].id == key){
+				out += '<div class="cart__item">';
+				out += '<div class="img-name-holder">';
+				out += '<div class="chair__img__holder">';
+				out += '<img src="img/'+ array[key2].image +'" alt="" class="cart__img">';
+				out += '<i class="delete__cart__media fal fa-times" data-id="'+ array[key2].id +'"></i>';
+				out += '</div>';
+				out += '<div class="cart__inner name__holder">';
+				out += '<span class="cart__name">'+ array[key2].name +'</span>';
+				out += '</div>';
+				out += '</div>';
+				out += '<div class="cart__inner">';
+				out += '<span class="count__price">'+ array[key2].cost +'</span>';
+				out += '</div>';
+				out += '<div class="cart__inner">';
+				out += '<input type="number" class="changeInput" value="'+ cart[key] +'">';
+				out += '</div>';
+				out += '<div class="cart__inner">';
+				out += '<span class="cart__price">'+ array[key2].cost * cart[key] +'</span>';
+				out += '<i class="delete__cart fal fa-times" data-id="'+ array[key2].id +'"></i>';
+				out += '</div>';
+				out += '</div>';
+			}
+		}
 	}
-	localStorage.setItem('cart', JSON.stringify(cart));
-	showMiniCart();
-	showCart();
+	for(let key in cart){
+		for(key2 in array2){
+			if(array2[key2].id == key){
+				out += '<div class="cart__item">';
+				out += '<div class="img-name-holder">';
+				out += '<div class="sofa__img__holder">';
+				out += '<img src="img/'+ array2[key2].image +'" alt="" class="cart__img">';
+				out += '<i class="delete__cart__media fal fa-times" data-id="'+ array2[key2].id +'"></i>';
+				out += '</div>';
+				out += '<div class="cart__inner name__holder">';
+				out += '<span class="cart__name">'+ array2[key2].name +'</span>';
+				out += '</div>';
+				out += '</div>';
+				out += '<div class="cart__inner">';
+				out += '<span class="count__price">'+ array2[key2].cost +'</span>';
+				out += '</div>';
+				out += '<div class="cart__inner">';
+				out += '<input type="number" class="changeInput" value="'+ cart[key] +'">';
+				out += '</div>';
+				out += '<div class="cart__inner">';
+				out += '<span class="cart__price">'+ array2[key2].cost * cart[key] +'</span>';
+				out += '<i class="delete__cart fal fa-times" data-id="'+ array2[key2].id +'"></i>';
+				out += '</div>';
+				out += '</div>';
+			}
+		}
+	}
+	document.querySelector('.cart__product__holder').innerHTML = out;
 	deleteProduct();
+	changeCountProduct();
+	showMiniCart();
+
+}
+function deleteProduct(){
+	let deleteButton = document.querySelectorAll('.delete__cart');
+	for(let i = 0;i<deleteButton.length;i++){
+		deleteButton[i].onclick = function(){
+			let id = deleteButton[i].getAttribute('data-id');
+			delete cart[id];
+			saveCartToLS();
+			showCart();
+			totalPrice();
+			showMiniCart();
+		}
+	}
 }
 
-getSofaProducts();
+function deleteProductSecond(){
+	let deleteButton = document.querySelectorAll('.delete__cart__media');
+	for(let i = 0;i<deleteButton.length;i++){
+		deleteButton[i].onclick = function(){
+			let id = this.getAttribute('data-id');
+			delete cart[id];
+			saveCartToLS();
+			showCart();
+			totalPrice();
+			showMiniCart();
+		}
+	}
+}
+
+showCart();
+function saveCartToLS(){
+    localStorage.setItem('cart', JSON.stringify(cart) );
+}
+function totalPrice(){
+	let showPrice = document.querySelector('.price__num');
+	let totalPrice = document.querySelector('.total__price');
+	let zero = 0;
+	for(let key in cart){
+		for(key2 in array){
+			if(array[key2].id == key){
+				zero += array[key2].cost * cart[key];
+			}
+		}
+	}
+	for(let key in cart){
+		for(key2 in array2){
+			if(array2[key2].id == key){
+				zero += array2[key2].cost * cart[key];
+			}
+		}
+	}
+	totalPrice.innerHTML = zero;
+	if(cart != undefined){
+		let priceDelivery = document.querySelector('.delivery__country__price');
+		let result = zero - priceDelivery.innerHTML;
+		showPrice.innerHTML = result;
+	}
+}
+totalPrice();
+function changeCountProduct(){
+	let input = document.querySelectorAll('.changeInput');
+	let deleteButton = document.querySelectorAll('.delete__cart');
+	for(let i = 0;i<input.length;i++){
+		input[i].onchange = function(){
+			let id = deleteButton[i].getAttribute('data-id');
+			let valueNumber = Number(input[i].value);
+			cart[id] = valueNumber;
+			if (cart[id] < 1) {
+				delete cart[id];
+			}
+			saveCartToLS();
+			totalPrice();
+			showCart();
+			showMiniCart();
+		}
+	}
+}
+changeCountProduct();
 // Вывод количество продуктов
 function showMiniCart(){
 	let zero = 0;
@@ -482,79 +483,12 @@ function showMiniCart(){
 	document.querySelector('.header__buy__num').innerHTML = zero;
 
 }
-// Вывод выбранных продуктов
-function showCart(){
-	let out = '';
-	for(let key in cart){
-		for(key2 in array){
-			if(array[key2].id == key){
-				out += '<div class="cart__item chairCartItem">';
-				out += '<div class="cart__left">';
-				out += '<img src="img/'+ array[key2].image +'" alt="" class="cart__img">';
-				out += '<span class="cart__name">'+ array[key2].name +'</span>';
-				out += '</div>';
-				out += '<div class="cart__right__holder">';
-				out += '<div class="cart__right">';
-				out += '<span class="cart__count cart__right__title">'+ cart[key] +'</span>';
-				out += '<span class="cart__sum cart__right__title"> * </span>';
-				out += '<span class="price__holder">';
-				out += '<span class="cart__price cart__right__title">'+ array[key2].cost +'</span>';
-				out += '<span class="cart__ru cart__right__title"> ru </span>';
-				out += '</span>';
-				out += '</div>';
-				out += '<i class="delete__cart fal fa-times" data-id="'+ array[key2].id +'"></i>';
-				out += '</div>';
-				out += '</div>';
-		
-			}
-		}
-	}
-	for(let key in cart){
-		for(key2 in array2){
-			if(array2[key2].id == key){
-				out += '<div class="cart__item">';
-				out += '<div class="cart__left">';
-				out += '<img src="img/'+ array2[key2].image +'" alt="" class="cart__img">';
-				out += '<span class="cart__name">'+ array2[key2].name +'</span>';
-				out += '</div>';
-				out += '<div class="cart__right__holder">';
-				out += '<div class="cart__right">';
-				out += '<span class="cart__count cart__right__title">'+ cart[key] +'</span>';
-				out += '<span class="cart__sum cart__right__title"> * </span>';
-				out += '<span class="price__holder">';
-				out += '<span class="cart__price cart__right__title">'+ array2[key2].cost +'</span>';
-				out += '<span class="cart__ru cart__right__title"> ru </span>';
-				out += '</span>';
-				out += '</div>';
-				out += '<i class="delete__cart fal fa-times" data-id="'+ array2[key2].id +'"></i>';
-				out += '</div>';
-				out += '</div>';
-		
-			}
-		}
-	}
-	document.querySelector('.cart__holder').innerHTML = out;
-	deleteProduct();
-
-}
 showMiniCart();
-showCart();
-
-
-function deleteProduct(){
-	let deleteButton = document.querySelectorAll('.delete__cart');
-	for(let i = 0;i<deleteButton.length;i++){
-		deleteButton[i].onclick = function(){
-			let id = this.getAttribute('data-id');
-			delete cart[id];
-			showMiniCart();
-			console.log(cart[id]);
-			saveCartToLS();
-			showCart();
-		}
-	}
-}
-
-function saveCartToLS(){
-    localStorage.setItem('cart', JSON.stringify(cart) );
-}
+// var countries = ['Afghanistan', 'Albania', 'Algeria', 'American Samoa', 'Andorra', 'Angola', 'Anguilla', 'Antigua and Barbuda', 'Argentina', 'Armenia', 'Aruba', 'Australia', 'Austria', 'Azerbaijan', 'Bangladesh', 'Barbados', 'Bahamas', 'Bahrain', 'Belarus', 'Belgium', 'Belize', 'Benin', 'Bermuda', 'Bhutan', 'Bolivia', 'Bosnia and Herzegovina', 'Botswana', 'Brazil', 'British Indian Ocean Territory', 'British Virgin Islands', 'Brunei Darussalam', 'Bulgaria', 'Burkina Faso', 'Burma', 'Burundi', 'Cambodia', 'Cameroon', 'Canada', 'Cape Verde', 'Cayman Islands', 'Central African Republic', 'Chad', 'Chile', 'China', 'Christmas Island', 'Cocos (Keeling) Islands', 'Colombia', 'Comoros', 'Congo-Brazzaville', 'Congo-Kinshasa', 'Cook Islands', 'Costa Rica', 'Croatia', 'Cura?ao', 'Cyprus', 'Czech Republic', 'Denmark', 'Djibouti', 'Dominica', 'Dominican Republic', 'East Timor', 'Ecuador', 'El Salvador', 'Egypt', 'Equatorial Guinea', 'Eritrea', 'Estonia', 'Ethiopia', 'Falkland Islands', 'Faroe Islands', 'Federated States of Micronesia', 'Fiji', 'Finland', 'France', 'French Guiana', 'French Polynesia', 'French Southern Lands', 'Gabon', 'Gambia', 'Georgia', 'Germany', 'Ghana', 'Gibraltar', 'Greece', 'Greenland', 'Grenada', 'Guadeloupe', 'Guam', 'Guatemala', 'Guernsey', 'Guinea', 'Guinea-Bissau', 'Guyana', 'Haiti', 'Heard and McDonald Islands', 'Honduras', 'Hong Kong', 'Hungary', 'Iceland', 'India', 'Indonesia', 'Iraq', 'Ireland', 'Isle of Man', 'Israel', 'Italy', 'Jamaica', 'Japan', 'Jersey', 'Jordan', 'Kazakhstan', 'Kenya', 'Kiribati', 'Kuwait', 'Kyrgyzstan', 'Laos', 'Latvia', 'Lebanon', 'Lesotho', 'Liberia', 'Libya', 'Liechtenstein', 'Lithuania', 'Luxembourg', 'Macau', 'Macedonia', 'Madagascar', 'Malawi', 'Malaysia', 'Maldives', 'Mali', 'Malta', 'Marshall Islands', 'Martinique', 'Mauritania', 'Mauritius', 'Mayotte', 'Mexico', 'Moldova', 'Monaco', 'Mongolia', 'Montenegro', 'Montserrat', 'Morocco', 'Mozambique', 'Namibia', 'Nauru', 'Nepal', 'Netherlands', 'New Caledonia', 'New Zealand', 'Nicaragua', 'Niger', 'Nigeria', 'Niue', 'Norfolk Island', 'Northern Mariana Islands', 'Norway', 'Oman', 'Pakistan', 'Palau', 'Panama', 'Papua New Guinea', 'Paraguay', 'Peru', 'Philippines', 'Pitcairn Islands', 'Poland', 'Portugal', 'Puerto Rico', 'Qatar', 'R?union', 'Romania', 'Russia', 'Rwanda', 'Saint Barth?lemy', 'Saint Helena', 'Saint Kitts and Nevis', 'Saint Lucia', 'Saint Martin', 'Saint Pierre and Miquelon', 'Saint Vincent', 'Samoa', 'San Marino', 'S?o Tom? and Pr?ncipe', 'Saudi Arabia', 'Senegal', 'Serbia', 'Seychelles', 'Sierra Leone', 'Singapore', 'Sint Maarten', 'Slovakia', 'Slovenia', 'Solomon Islands', 'Somalia', 'South Africa', 'South Georgia', 'South Korea', 'Spain', 'Sri Lanka', 'Sudan', 'Suriname', 'Svalbard and Jan Mayen', 'Sweden', 'Swaziland', 'Switzerland', 'Syria', 'Taiwan', 'Tajikistan', 'Tanzania', 'Thailand', 'Togo', 'Tokelau', 'Tonga', 'Trinidad and Tobago', 'Tunisia', 'Turkey', 'Turkmenistan', 'Turks and Caicos Islands', 'Tuvalu', 'Uganda', 'Ukraine', 'United Arab Emirates', 'United Kingdom', 'United States', 'Uruguay', 'Uzbekistan', 'Vanuatu', 'Vatican City', 'Vietnam', 'Venezuela', 'Wallis and Futuna', 'Western Sahara', 'Yemen', 'Zambia', 'Zimbabwe'];
+// let empty = '';
+// let discount = document.querySelector('.discount');
+// for(let i = 0;i<countries.length;i++){
+// 	empty += countries[i];
+// 	empty += '<br>';
+// 	discount.innerHTML = empty;
+// }
